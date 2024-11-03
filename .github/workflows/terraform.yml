@@ -74,13 +74,14 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
 
+      # muda diretorio
+      - name: Workdir
+        run: |
+          cd terraform
+
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform init
-
-      # muda diretorio
-      - name: Workdir
-        run: cd terraform
 
       # Checks that all Terraform configuration files adhere to a canonical format
       - name: Terraform Format
