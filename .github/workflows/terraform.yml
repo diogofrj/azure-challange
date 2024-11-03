@@ -76,10 +76,7 @@ jobs:
         run: terraform init
         working-directory: terraform
 
-      # Checks that all Terraform configuration files adhere to a canonical format
-      # - name: Terraform Format
-      #   run: terraform fmt -check --recursive
-      #   working-directory: terraform
+
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
