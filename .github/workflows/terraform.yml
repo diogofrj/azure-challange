@@ -70,7 +70,7 @@ jobs:
           enable-AzPSSession: false
           environment: azurecloud
           allow-no-subscriptions: false
-          auth-type: SERVICE_PRINCIPAL
+          auth-type: device-code
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
