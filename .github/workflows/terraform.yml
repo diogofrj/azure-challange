@@ -41,33 +41,22 @@
 #       uses: hashicorp/setup-terraform@v1
 #       with:
 #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
 name: 'Terraform'
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
-
 permissions:
   id-token: write
   contents: read
-
 jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: production
-
     defaults:
       run:
         shell: bash
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-
 
     steps:
       - name: Checkout
@@ -76,37 +65,30 @@ jobs:
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }} 
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           enable-AzPSSession: false
           environment: azurecloud
           allow-no-subscriptions: false
           auth-type: SERVICE_PRINCIPAL
           client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           # cli_config_credentials_token: ${{ secrets.AZURE_CREDENTIALS }}
           terraform_version: "1.9.0"
-          
-
       - name: Terraform Init
         run: terraform init
         working-directory: terraform
-
       - name: Terraform Format
         run: terraform fmt -check --recursive
         working-directory: terraform
-
       - name: Terraform Plan
         run: terraform plan -input=false -var-file=common.tfvars
         working-directory: terraform
-
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false -var-file=common.tfvars
         working-directory: terraform
-
       - name: Set Output
         run: echo "output_name=output_value" >> $GITHUB_ENV
