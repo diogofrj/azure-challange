@@ -76,8 +76,6 @@ jobs:
         run: terraform init
         working-directory: terraform
 
-
-
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: terraform plan -input=false -var-file=terraform/common.tfvars
