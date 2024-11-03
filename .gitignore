@@ -34,3 +34,4 @@ override.tf.json
 terraform.rc
 terraform/.terraform.lock.hcl
 terraform/LICENSE
+terraform/backend.hcl
