@@ -66,7 +66,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
@@ -76,8 +75,8 @@ jobs:
           enable-AzPSSession: false
           environment: azurecloud
           allow-no-subscriptions: false
-          audience: api://AzureADTokenExchange
-          auth-type: OIDC
+          auth-type: SERVICE_PRINCIPAL
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
