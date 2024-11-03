@@ -40,4 +40,20 @@ No resources.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_resource_group_name"></a> [resource\_group\_name](#output\_resource\_group\_name) | n/a |
+
+## Diagrama de Infraestrutura
+
+O diagrama abaixo representa a infraestrutura atual do projeto:
+
+ 
+```mermaid
+flowchart TD
+	subgraph Terraform
+		subgraph Azurerm
+			module.rg.azurerm_resource_group.rg["azurerm_resource_group.rg"]
+		end
+	end
+```
