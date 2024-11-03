@@ -1,24 +1,3 @@
-variable "subscription_id" {
-  type        = string
-  description = "Subscription ID"
-}
-
-variable "tenant_id" {
-  type        = string
-  description = "Tenant ID"
-}
-
-variable "client_id" {
-  type        = string
-  description = "Client ID"
-}
-
-variable "client_secret" {
-  type        = string
-  description = "Client Secret"
-}
-###### SHARED ###########
-
 variable "vnet_name" {
   type        = string
   description = "Nome da Virtual Network"
