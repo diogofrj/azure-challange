@@ -41,7 +41,13 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: |
+          terraform init \
+          -backend-config="resource_group_name=${{ secrets.TF_VAR_ARM_BACKEND_RESOURCE_GROUP }}" \
+          -backend-config="storage_account_name=${{ secrets.TF_VAR_ARM_BACKEND_STORAGE_ACCOUNT }}" \
+          -backend-config="container_name=${{ secrets.TF_VAR_ARM_BACKEND_CONTAINER }}" \
+          -backend-config="key=${{ secrets.TF_VAR_ARM_BACKEND_KEY }}" \
+          -backend-config="access_key=${{ secrets.TF_VAR_ARM_BACKEND_ACCESS_KEY }}"
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: Terraform Validate
