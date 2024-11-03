@@ -8,6 +8,9 @@ function apply() {
     terraform apply -var-file=auto.tfvars -auto-approve
     }
 
+function tfsec() {
+    tfsec . --tfvars-file auto.tfvars
+}
 function gera_doc() {
     terraform-docs markdown . > modules/README.md
     terramaid
