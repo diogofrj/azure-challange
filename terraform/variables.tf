@@ -48,3 +48,7 @@ variable "tags" {
   description = "Tags para os recursos"
   default     = {}
 }
+variable "route_table_name" {
+  type        = string
+  description = "Nome da route table"
+}
