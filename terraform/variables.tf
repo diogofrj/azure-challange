@@ -1,8 +1,3 @@
-variable "vnet_name" {
-  type        = string
-  description = "Nome da Virtual Network"
-}
-
 variable "location" {
   type        = string
   description = "Localização dos recursos"
@@ -13,6 +8,16 @@ variable "resource_group_name" {
   description = "Nome do Resource Group"
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "Tags para os recursos"
+  default     = {}
+}
+
+variable "vnet_name" {
+  type        = string
+  description = "Nome da Virtual Network"
+}
 # variable "address_space" {
 #   type        = list(string)
 #   description = "Address space da VNet"
@@ -43,11 +48,6 @@ variable "resource_group_name" {
 #   description = "Nome da zona DNS privada"
 # }
 
-# variable "tags" {
-#   type        = map(string)
-#   description = "Tags para os recursos"
-#   default     = {}
-# }
 # variable "route_table_name" {
 #   type        = string
 #   description = "Nome da route table"
