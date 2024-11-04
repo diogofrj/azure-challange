@@ -3,19 +3,17 @@ locals {
   node_rg     = "rg-${var.environment}-${var.location_short}-${var.workload}-node"
 }
 
-# Primeiro, criar a identidade gerenciada
-resource "azurerm_user_assigned_identity" "aks_identity" {
+resource "azurerm_system_assigned_identity" "aks_identity" {
   name                = "id-${local.cluster_name}"
   resource_group_name = var.resource_group_name
   location            = var.location
   tags                = var.tags
 }
-
 # Dar permissão para a identidade gerenciar o DNS
 resource "azurerm_role_assignment" "dns_contributor" {
   scope                = var.private_dns_zone_id
   role_definition_name = "Private DNS Zone Contributor"
-  principal_id         = azurerm_user_assigned_identity.aks_identity.principal_id
+  principal_id         = azurerm_system_assigned_identity.aks_identity.principal_id
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
@@ -43,8 +41,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   identity {
-    type = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.aks_identity.id]
+    type = "SystemAssigned"
+    identity_ids = [azurerm_system_assigned_identity.aks_identity.id]
   }
 
   network_profile {
@@ -69,7 +67,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   name                = "userpool"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   vm_size             = var.user_node_pool_vm_size
-  node_count          = var.user_node_pool_min_count
+  node_count          = "1"
   min_count          = var.user_node_pool_min_count 
   max_count          = var.user_node_pool_max_count
   vnet_subnet_id     = var.subnet_id
