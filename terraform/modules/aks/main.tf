@@ -3,6 +3,21 @@ locals {
   node_rg     = "rg-${var.environment}-${var.location_short}-${var.workload}-node"
 }
 
+# Primeiro, criar a identidade gerenciada
+resource "azurerm_user_assigned_identity" "aks_identity" {
+  name                = "id-${local.cluster_name}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  tags                = var.tags
+}
+
+# Dar permissão para a identidade gerenciar o DNS
+resource "azurerm_role_assignment" "dns_contributor" {
+  scope                = var.private_dns_zone_id
+  role_definition_name = "Private DNS Zone Contributor"
+  principal_id         = azurerm_user_assigned_identity.aks_identity.principal_id
+}
+
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = local.cluster_name
   location            = var.location
@@ -28,7 +43,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.aks_identity.id]
   }
 
   network_profile {
