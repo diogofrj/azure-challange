@@ -14,10 +14,10 @@ variable "tags" {
   default     = {}
 }
 
-variable "vnet_name" {
-  type        = string
-  description = "Nome da Virtual Network"
-}
+# variable "vnet_name" {
+#   type        = string
+#   description = "Nome da Virtual Network"
+# }
 # variable "address_space" {
 #   type        = list(string)
 #   description = "Address space da VNet"
