@@ -59,10 +59,7 @@ variable "dns_zone_name" {
   type        = string
 }
 
-variable "kubernetes_version" {
-  description = "Versão do Kubernetes"
-  type        = string
-}
+
 
 variable "service_cidr" {
   description = "CIDR para serviços do Kubernetes"
@@ -115,3 +112,8 @@ variable "retention_in_days" {
   default     = 30
 }
 
+variable "auto_scaling_enabled" {
+  description = "Habilita o auto scaling"
+  type        = bool
+  default     = true
+}

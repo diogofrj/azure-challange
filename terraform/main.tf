@@ -36,7 +36,6 @@ module "aks" {
   environment               = var.environment
   location_short            = var.location_short
   workload                  = var.workload
-  kubernetes_version        = var.kubernetes_version
   subnet_id                 = module.network.internal_subnet_id
   service_cidr              = var.service_cidr
   dns_service_ip            = var.dns_service_ip

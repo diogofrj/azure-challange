@@ -23,12 +23,6 @@ variable "resource_group_name" {
   description = "Nome do Resource Group"
 }
 
-variable "kubernetes_version" {
-  type        = string
-  description = "Versão do Kubernetes"
-  default     = "1.27.7"
-}
-
 variable "subnet_id" {
   type        = string
   description = "ID da subnet para o AKS"

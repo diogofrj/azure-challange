@@ -8,14 +8,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = local.cluster_name
-  kubernetes_version  = var.kubernetes_version
   node_resource_group = local.node_rg
 
   default_node_pool {
     name                = "systempool"
+    # enable_auto_scaling = true
     vm_size             = var.system_node_pool_vm_size
-    min_count          = var.system_node_pool_min_count
-    max_count          = var.system_node_pool_max_count
+    # min_count          = var.system_node_pool_min_count
+    # max_count          = var.system_node_pool_max_count
     vnet_subnet_id     = var.subnet_id
     os_disk_type       = "Ephemeral"
     os_sku             = "AzureLinux"
@@ -53,11 +53,18 @@ resource "azurerm_kubernetes_cluster_node_pool" "user" {
   name                = "userpool"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
   vm_size             = var.user_node_pool_vm_size
-  min_count          = var.user_node_pool_min_count
+  node_count          = var.user_node_pool_min_count
+  min_count          = var.user_node_pool_min_count 
   max_count          = var.user_node_pool_max_count
   vnet_subnet_id     = var.subnet_id
   os_disk_type       = "Ephemeral"
   os_sku             = "AzureLinux"
+  mode               = "User"
+  max_pods           = 100
+  eviction_policy    = "Delete"
+  upgrade_settings {
+    max_surge = "1"
+  }
   
   tags = merge(var.tags, {
     "nodepool-type" = "user"

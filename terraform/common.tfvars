@@ -22,7 +22,7 @@ dns_zone_name = "challenge.internal"
 
 
 #AKS
-kubernetes_version = "1.27.7"
+
 service_cidr = "172.16.0.0/16"
 dns_service_ip = "172.16.0.10"
 docker_bridge_cidr = "172.17.0.1/16"
@@ -31,7 +31,9 @@ user_node_pool_vm_size = "Standard_B2ms"
 system_node_pool_min_count = 1
 system_node_pool_max_count = 2
 user_node_pool_min_count = 1
-user_node_pool_max_count = 3
+user_node_pool_max_count = 2
+auto_scaling_enabled = true
+
 
 
 #Log Analytics
