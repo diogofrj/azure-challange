@@ -63,7 +63,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
+        run: terraform plan -no-color -var-file=auto.tfvars
         working-directory: ${{ env.WORKING_DIR }}
         continue-on-error: true
 
@@ -97,5 +97,5 @@ jobs:
 # t
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var-file=auto.tfvars
         working-directory: ${{ env.WORKING_DIR }}
