@@ -1,6 +1,6 @@
 #RG
 location = "westus"
-resource_group_name = "rg-shared"
+resource_group_name = "rg-shared2"
 tags = {
   environment = "shared"
   project = "Azure Challenge"
