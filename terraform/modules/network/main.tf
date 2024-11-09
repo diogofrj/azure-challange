@@ -1,27 +1,57 @@
-resource "azurerm_virtual_network" "vnet" {
-  name                = var.vnet_name
+resource "azurerm_virtual_network" "vnet_hub" {
+  name                = var.vnet_hub_name
   location            = var.location
   resource_group_name = var.resource_group_name
-  address_space       = var.address_space
+  address_space       = var.address_space_hub
   tags                = var.tags
 
   dns_servers = []
 }
 
-resource "azurerm_subnet" "shared" {
-  name                 = "sn-shared"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = [var.shared_subnet_prefix]
+resource "azurerm_virtual_network" "vnet_spoke" {
+  name                = var.vnet_spoke_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = var.address_space_spoke
+  tags                = var.tags
 
-  service_endpoints = ["Microsoft.KeyVault", "Microsoft.Storage"]
+  dns_servers = []
 }
 
-resource "azurerm_subnet" "internal" {
-  name                 = "sn-internal"
+# Subnet Azure Firewall
+resource "azurerm_subnet" "subnet_afw" {
+  name                 = var.subnet_afw_name
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = [var.internal_subnet_prefix]
+  virtual_network_name = azurerm_virtual_network.vnet_hub.name
+  address_prefixes     = [var.subnet_afw_prefix]
+}
+
+# Subnet Gateway
+resource "azurerm_subnet" "subnet_vpng" {
+  name                 = var.subnet_vpng_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_hub.name
+  address_prefixes     = [var.subnet_vpng_prefix]
+}
+
+# Subnet Bastion
+resource "azurerm_subnet" "subnet_bastion" {
+  name                 = var.subnet_bastion_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_hub.name
+  address_prefixes     = [var.subnet_bastion_prefix]
+}
+
+
+
+# Subnet AKS Nodes
+resource "azurerm_subnet" "subnet_aks" {
+  name                 = var.subnet_aks_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+  address_prefixes     = [var.subnet_aks_prefix]
+
+  service_endpoints = ["Microsoft.KeyVault", "Microsoft.Storage"]
 
   delegation {
     name = "aks-delegation"
@@ -34,23 +64,48 @@ resource "azurerm_subnet" "internal" {
   }
 }
 
-resource "azurerm_subnet" "mgmt" {
-  name                 = "sn-mgmt"
+# Subnet AKS Cluster Ingress
+resource "azurerm_subnet" "subnet_aks_clusteringress" {
+  name                 = var.subnet_aks_clusteringress_name
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = [var.mgmt_subnet_prefix]
+  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+  address_prefixes     = [var.subnet_aks_clusteringress_prefix]
 }
 
-resource "azurerm_private_dns_zone" "dns" {
-  name                = var.dns_zone_name
-  resource_group_name = var.resource_group_name
-  tags                = var.tags
+# Subnet AKS Application Gateway
+resource "azurerm_subnet" "subnet_aks_agw" {
+  name                 = var.subnet_aks_agw_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+  address_prefixes     = [var.subnet_aks_agw_prefix]
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "dns_link" {
-  name                  = "dns-vnet-link"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.dns.name
-  virtual_network_id    = azurerm_virtual_network.vnet.id
-  registration_enabled  = true
+# Subnet AKS Private Link
+resource "azurerm_subnet" "subnet_aks_pl" {
+  name                 = var.subnet_aks_pl_name
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+  address_prefixes     = [var.subnet_aks_platform_prefix]
+}
+
+# Peering Hub to Spoke
+resource "azurerm_virtual_network_peering" "hub_to_spoke" {
+  name                      = var.peering_hub_to_spoke_name
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.vnet_hub.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet_spoke.id
+  allow_forwarded_traffic   = true
+  allow_gateway_transit     = false
+  use_remote_gateways       = false
+}
+
+# Peering Spoke to Hub  
+resource "azurerm_virtual_network_peering" "spoke_to_hub" {
+  name                      = var.peering_spoke_to_hub_name
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.vnet_spoke.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet_hub.id
+  allow_forwarded_traffic   = true
+  allow_gateway_transit     = false
+  use_remote_gateways       = false
 }

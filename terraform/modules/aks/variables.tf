@@ -1,95 +1,106 @@
-variable "environment" {
-  type        = string
-  description = "Ambiente (dev, prod, etc)"
-}
-
-variable "location" {
-  type        = string
-  description = "Localização do AKS"
-}
-
-variable "location_short" {
-  type        = string
-  description = "Código curto da localização (ex: wus para westus)"
-}
-
-variable "workload" {
-  type        = string
-  description = "Nome da carga de trabalho"
-}
 
 variable "resource_group_name" {
   type        = string
   description = "Nome do Resource Group"
 }
-
-variable "subnet_id" {
+variable "location" {
   type        = string
-  description = "ID da subnet para o AKS"
+  description = "Localização dos recursos"
+}
+variable "tags" {
+  type        = map(string)
+  description = "Tags dos recursos"
+}
+variable "cluster_name" {
+  description = "Nome do cluster AKS"
+  type        = string
 }
 
-variable "service_cidr" {
+variable "kubernetes_version" {
+  description = "Versão do Kubernetes para o cluster AKS"
   type        = string
-  description = "CIDR para serviços do Kubernetes"
-  default     = "172.16.0.0/16"
 }
 
-variable "dns_service_ip" {
+variable "sku_tier" {
+  description = "Tier do SKU do cluster AKS"
   type        = string
-  description = "IP do serviço DNS do Kubernetes"
-  default     = "172.16.0.10"
 }
 
-variable "docker_bridge_cidr" {
+variable "system_node_pool_name" {
+  description = "Nome do node pool do sistema"
   type        = string
-  description = "CIDR para docker bridge"
-  default     = "172.17.0.1/16"
+}
+variable "system_node_pool_node_count" {
+  description = "Número de nós no node pool do sistema"
+  type        = number
+}
+variable "system_node_pool_auto_scaling_enabled" {
+  description = "Se o auto scaling está habilitado no node pool do sistema"
+  type        = bool
+}
+variable "system_node_pool_os_disk_size_gb" {
+  description = "Tamanho do disco do node pool do sistema"
+  type        = number
 }
 
 variable "system_node_pool_vm_size" {
+  description = "Tamanho da VM do node pool do sistema"
   type        = string
-  description = "Tamanho da VM para system pool"
-  default     = "Standard_D2s_v3"
-}
-
-variable "user_node_pool_vm_size" {
-  type        = string
-  description = "Tamanho da VM para user pool"
-  default     = "Standard_D4s_v3"
 }
 
 variable "system_node_pool_min_count" {
+  description = "Número mínimo de nós no node pool do sistema"
   type        = number
-  default     = 1
 }
 
 variable "system_node_pool_max_count" {
+  description = "Número máximo de nós no node pool do sistema"
   type        = number
-  default     = 3
+}
+
+variable "user_node_pool_name" {
+  description = "Nome do node pool de usuário"
+  type        = string
+}
+variable "user_node_pool_auto_scaling_enabled" {
+  description = "Se o auto scaling está habilitado no node pool de usuário"
+  type        = bool
+}
+variable "user_node_pool_node_count" {
+  description = "Número de nós no node pool de usuário"
+  type        = number
+}
+variable "user_node_pool_vm_size" {
+  description = "Tamanho da VM do node pool de usuário"
+  type        = string
 }
 
 variable "user_node_pool_min_count" {
+  description = "Número mínimo de nós no node pool de usuário"
   type        = number
-  default     = 1
 }
 
 variable "user_node_pool_max_count" {
+  description = "Número máximo de nós no node pool de usuário"
   type        = number
-  default     = 5
 }
-
-variable "private_dns_zone_id" {
+variable "private_cluster_enabled" {
+  description = "Se o cluster AKS é privado"
+  type        = bool
+}
+variable "network_plugin" {
+  description = "Plugin de rede do cluster AKS"
   type        = string
-  description = "ID da zona DNS privada"
 }
-
-variable "log_analytics_workspace_id" {
+variable "network_policy" {
+  description = "Política de rede do cluster AKS"
   type        = string
-  description = "ID do workspace do Log Analytics"
 }
-
-variable "tags" {
-  type        = map(string)
-  description = "Tags para os recursos"
-  default     = {}
+variable "service_mesh_mode" {
+  description = "Modo do service mesh"
+  type        = string
+}
+variable "service_mesh_revisions" {
+  description = "Revisões do service mesh"
+  type        = list(string)
 }

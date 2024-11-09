@@ -5,8 +5,8 @@
 
 Requisitos :
   iac:
-    -  Toda a infra deve ser provisionada a partir de um script chamado run.sh
-    -  A infra deve ser provisionada via terraform (iuniciado pelo run.sh)
+    -  Toda a infra deve ser provisionada a partir de um script chamado run.sh ✅
+    -  A infra deve ser provisionada via terraform (iuniciado pelo run.sh)- ✅
     - Os itens de Iaas devem ser configurados via Ansible e integrados com o terraform dentro do modulo e não no default (main.tf raiz).
     -  As Imagens de vm devem ser criadas via Packer e ter um ciclo de destruição das mesmas.
 
